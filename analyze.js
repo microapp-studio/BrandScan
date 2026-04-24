@@ -1,4 +1,6 @@
 export default async function handler(req, res) {
+  res.setHeader('Content-Type', 'application/json; charset=utf-8');
+
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Only POST is allowed' });
   }
@@ -7,29 +9,37 @@ export default async function handler(req, res) {
     const { imageDataUrl, thriftPrice, note } = req.body || {};
 
     if (!process.env.OPENAI_API_KEY) {
-      return res.status(500).json({ error: 'OPENAI_API_KEY is not set in environment variables' });
+      return res.status(500).json({ error: 'OPENAI_API_KEY is not set in Vercel Environment Variables' });
     }
 
     if (!imageDataUrl || !imageDataUrl.startsWith('data:image/')) {
-      return res.status(400).json({ error: 'Image is required as data URL' });
+      return res.status(400).json({ error: 'Image is required' });
     }
 
     const prompt = `
 Ты BrandScan — помощник для секонда, винтажа и ресейла.
 
-Задача:
-1. Определи бренд и тип вещи по фото ярлыка/вещи.
-2. Дай ориентир новой цены.
-3. Дай ориентир цены на б/у рынке.
-4. Сравни с ценой в секонде.
-5. Скажи: "Брать", "Брать с осторожностью", "Не брать" или "Нужно больше фото".
-6. По оригинальности не делай категоричных заявлений. Используй: "вероятно оригинал", "есть сомнения", "похоже на подделку", "недостаточно данных".
-7. Если данных мало, обязательно попроси дополнительные фото.
+Проанализируй фото ярлыка или вещи.
+Нужно дать короткий практический ответ:
+- что за бренд;
+- что за вещь;
+- сколько примерно стоит новая вещь;
+- сколько примерно стоит на б/у рынке;
+- стоит ли брать по цене в секонде;
+- оригинал или есть сомнения;
+- что сфотографировать дополнительно.
 
 Цена в секонде: ${thriftPrice || 'не указана'}
 Комментарий пользователя: ${note || 'нет'}
 
-Ответ верни СТРОГО в JSON без markdown:
+Правила:
+1. Не утверждай подлинность на 100%.
+2. Используй формулировки: "вероятно оригинал", "есть сомнения", "похоже на подделку", "недостаточно данных".
+3. Если бренд массовый и недорогой, так и скажи.
+4. Если цена в секонде не указана, решение должно учитывать отсутствие цены.
+5. Ответ только JSON, без markdown.
+
+Формат:
 {
   "brand": "",
   "item_type": "",
@@ -43,8 +53,6 @@ export default async function handler(req, res) {
   "need_more_photos": [],
   "sources": []
 }
-
-Пиши коротко и полезно. Валюта — доллары США. Если цена неизвестна, напиши "нет надежных данных".
 `;
 
     const response = await fetch('https://api.openai.com/v1/responses', {
@@ -54,32 +62,34 @@ export default async function handler(req, res) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'gpt-5-mini',
+        model: 'gpt-4.1-mini',
         input: [
           {
             role: 'user',
             content: [
               { type: 'input_text', text: prompt },
-              { type: 'input_image', image_url: imageDataUrl, detail: 'high' }
+              { type: 'input_image', image_url: imageDataUrl }
             ]
           }
-        ],
-        tools: [{ type: 'web_search_preview' }]
+        ]
       })
     });
 
     const raw = await response.json();
 
     if (!response.ok) {
-      return res.status(response.status).json({ error: raw.error?.message || 'OpenAI API error', raw });
+      return res.status(response.status).json({
+        error: raw.error?.message || 'OpenAI API error'
+      });
     }
 
     const text =
       raw.output_text ||
-      raw.output?.flatMap(item => item.content || []).map(c => c.text || '').join('\n') ||
+      (raw.output || []).flatMap(item => item.content || []).map(c => c.text || '').join('\n') ||
       '';
 
     let parsed;
+
     try {
       parsed = JSON.parse(text.replace(/```json|```/g, '').trim());
     } catch (e) {
@@ -92,9 +102,9 @@ export default async function handler(req, res) {
         authenticity: "недостаточно данных",
         confidence: 30,
         decision: "Нужно больше фото",
-        reason: text || "ИИ не вернул структурированный JSON.",
-        need_more_photos: ["внутренний ярлык", "состав", "логотип крупно", "швы", "фурнитура", "общий вид вещи"],
-        sources: ["Автоматический анализ без подтвержденной экспертизы."]
+        reason: text || "ИИ не вернул структурированный ответ.",
+        need_more_photos: ["внутренний ярлык", "состав", "страна производства", "общий вид вещи", "швы и фурнитура"],
+        sources: ["Автоматический анализ. Не является экспертизой подлинности."]
       };
     }
 

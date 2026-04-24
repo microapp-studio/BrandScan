@@ -5,23 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
   <title>BrandScan</title>
   <link rel="manifest" href="manifest.json" />
-  <meta name="theme-color" content="#172536" />
+  <meta name="theme-color" content="#101b2b" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-title" content="BrandScan" />
   <link rel="apple-touch-icon" href="icon-192.png" />
+
   <style>
     :root {
-      --denim: #172536;
-      --denim2: #223a59;
-      --tag: #f0d6a2;
-      --tag2: #c6924c;
-      --ink: #0d1a2a;
-      --cream: #fff8ec;
-      --muted: rgba(255,248,236,.74);
-      --line: rgba(255,255,255,.14);
-      --green: #d7f5cf;
-      --yellow: #fff0bd;
-      --red: #ffd1d1;
+      --bg: #101b2b;
+      --card: #17263a;
+      --card2: #1d3049;
+      --line: rgba(255,255,255,.10);
+      --text: #fff8ec;
+      --muted: rgba(255,248,236,.68);
+      --tag: #efd39a;
+      --tag-dark: #101b2b;
+      --green: #bff0c2;
+      --yellow: #ffe7a6;
+      --red: #ffc2c2;
     }
 
     * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -30,202 +31,261 @@
       margin: 0;
       min-height: 100vh;
       font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-      color: var(--cream);
+      color: var(--text);
       background:
-        radial-gradient(circle at 20% 10%, rgba(255,255,255,.08), transparent 26%),
-        linear-gradient(145deg, rgba(255,255,255,.05) 25%, transparent 25%) -9px 0/18px 18px,
-        linear-gradient(225deg, rgba(255,255,255,.04) 25%, transparent 25%) -9px 0/18px 18px,
-        linear-gradient(315deg, rgba(255,255,255,.04) 25%, transparent 25%) 0 0/18px 18px,
-        linear-gradient(45deg, rgba(255,255,255,.05) 25%, var(--denim) 25%) 0 0/18px 18px;
-      padding: env(safe-area-inset-top) 16px 34px;
+        radial-gradient(circle at 15% 0%, rgba(239,211,154,.14), transparent 28%),
+        radial-gradient(circle at 100% 20%, rgba(77,125,176,.16), transparent 32%),
+        linear-gradient(180deg, #0b1524 0%, var(--bg) 46%, #0d1726 100%);
+      padding: env(safe-area-inset-top) 16px 36px;
     }
 
-    .app { max-width: 480px; margin: 0 auto; }
+    .app {
+      max-width: 480px;
+      margin: 0 auto;
+    }
 
-    .top {
-      padding: 20px 0 14px;
+    .hero {
+      padding: 22px 0 12px;
+    }
+
+    .brandRow {
       display: flex;
       align-items: center;
       gap: 14px;
     }
 
     .logo {
-      width: 58px;
-      height: 58px;
-      border-radius: 18px;
+      width: 62px;
+      height: 62px;
+      border-radius: 20px;
       overflow: hidden;
-      box-shadow: 0 14px 30px rgba(0,0,0,.34);
+      box-shadow: 0 16px 36px rgba(0,0,0,.36);
+      border: 1px solid rgba(255,255,255,.12);
       flex: 0 0 auto;
-      border: 1px solid rgba(255,255,255,.14);
+      background: #0d1726;
     }
 
-    .logo img { width: 100%; height: 100%; display: block; object-fit: cover; }
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
 
     h1 {
       margin: 0;
-      font-size: 33px;
-      letter-spacing: -.9px;
-      line-height: 1;
+      font-size: 36px;
+      line-height: .95;
+      letter-spacing: -1.1px;
     }
 
-    .lead {
-      margin: 7px 0 0;
+    .subtitle {
+      margin: 9px 0 0;
+      font-size: 15px;
+      line-height: 1.42;
       color: var(--muted);
-      font-size: 14px;
-      line-height: 1.4;
+      max-width: 380px;
     }
 
     .card {
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.13);
-      border-radius: 26px;
+      background: linear-gradient(180deg, rgba(255,255,255,.075), rgba(255,255,255,.045));
+      border: 1px solid var(--line);
+      border-radius: 28px;
       padding: 18px;
-      margin: 14px 0;
-      box-shadow: 0 16px 40px rgba(0,0,0,.26);
-      backdrop-filter: blur(12px);
+      margin: 16px 0;
+      box-shadow: 0 22px 55px rgba(0,0,0,.30);
+      backdrop-filter: blur(14px);
     }
 
-    .title {
-      margin: 0 0 12px;
-      font-size: 19px;
+    .sectionTitle {
+      margin: 0 0 14px;
+      font-size: 22px;
       font-weight: 900;
-      letter-spacing: -.2px;
+      letter-spacing: -.3px;
     }
 
-    .cameraBox {
+    .cameraShell {
       position: relative;
       overflow: hidden;
       border-radius: 24px;
-      background: rgba(0,0,0,.22);
-      border: 1px solid rgba(255,255,255,.14);
-      min-height: 250px;
+      background: #07111e;
+      min-height: 286px;
+      border: 1px solid rgba(255,255,255,.12);
     }
 
     video, canvas, .preview {
       width: 100%;
-      height: 270px;
+      height: 286px;
       object-fit: cover;
       display: block;
-      background: #07111f;
+      background: #07111e;
     }
 
     canvas { display: none; }
 
-    .scanFrame {
+    .preview { display: none; }
+
+    .focusFrame {
       position: absolute;
-      inset: 38px 44px;
-      border: 3px solid rgba(240,214,162,.92);
-      border-radius: 20px;
-      box-shadow: 0 0 0 999px rgba(0,0,0,.28);
+      inset: 40px 36px;
+      border: 2px solid rgba(239,211,154,.95);
+      border-radius: 24px;
+      box-shadow: 0 0 0 999px rgba(0,0,0,.22);
       pointer-events: none;
     }
 
-    .scanFrame:before, .scanFrame:after {
+    .focusFrame:before, .focusFrame:after {
       content: "";
       position: absolute;
-      height: 4px;
-      width: 46%;
-      left: 27%;
-      background: rgba(255,255,255,.72);
-      border-radius: 999px;
+      left: 24%;
+      width: 52%;
+      height: 3px;
+      border-radius: 99px;
+      background: rgba(255,255,255,.75);
     }
 
-    .scanFrame:before { top: 42%; }
-    .scanFrame:after { top: 55%; }
+    .focusFrame:before { top: 43%; }
+    .focusFrame:after { top: 56%; }
 
-    .hint {
+    .cameraNote {
+      margin: 12px 0 0;
       color: var(--muted);
-      line-height: 1.45;
       font-size: 14px;
-      margin: 10px 0 0;
+      line-height: 1.5;
     }
 
-    .actions {
+    .grid2 {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 10px;
+      gap: 11px;
       margin-top: 12px;
     }
 
-    button, .fileBtn {
-      appearance: none;
-      border: none;
+    button, .fileButton {
+      width: 100%;
+      border: 0;
       border-radius: 18px;
       padding: 15px 13px;
-      font-weight: 900;
       font-size: 15px;
-      cursor: pointer;
-      color: var(--ink);
+      font-weight: 900;
+      color: var(--tag-dark);
       background: var(--tag);
+      cursor: pointer;
       box-shadow: 0 12px 24px rgba(0,0,0,.22);
       text-align: center;
     }
 
-    button.secondary, .fileBtn {
-      color: var(--cream);
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.16);
+    button.secondary, .fileButton {
+      color: var(--text);
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.12);
       box-shadow: none;
     }
 
-    button:active, .fileBtn:active { transform: scale(.98); }
+    button:active, .fileButton:active { transform: scale(.985); }
     button:disabled { opacity: .55; cursor: not-allowed; }
-
-    .fileBtn input { display: none; }
+    .fileButton input { display: none; }
 
     label {
       display: block;
-      margin: 14px 0 7px;
-      color: rgba(255,248,236,.82);
+      margin: 15px 0 7px;
+      color: rgba(255,248,236,.80);
       font-size: 14px;
     }
 
-    input, select {
+    input {
       width: 100%;
-      border: 1px solid rgba(255,255,255,.17);
+      border: 1px solid rgba(255,255,255,.12);
       border-radius: 17px;
       background: rgba(0,0,0,.18);
-      color: white;
+      color: #fff;
       padding: 15px 14px;
       font-size: 16px;
       outline: none;
     }
 
-    select option { color: #111; }
+    input::placeholder { color: rgba(255,255,255,.32); }
 
-    .wide { width: 100%; margin-top: 14px; }
-    .install { display: none; background: transparent; color: var(--tag); border: 1px solid rgba(240,214,162,.55); box-shadow: none; }
+    .primaryWide {
+      margin-top: 16px;
+      padding: 17px 14px;
+      font-size: 16px;
+    }
+
+    .install {
+      display: none;
+      margin-top: 12px;
+      background: transparent;
+      color: var(--tag);
+      border: 1px solid rgba(239,211,154,.48);
+      box-shadow: none;
+    }
 
     .loading {
       display: none;
-      gap: 11px;
       align-items: center;
-      margin-top: 12px;
+      gap: 10px;
       color: var(--muted);
       font-size: 14px;
+      line-height: 1.4;
+      margin-top: 13px;
     }
 
     .spinner {
-      width: 18px; height: 18px;
-      border: 3px solid rgba(255,255,255,.22);
-      border-top-color: var(--tag);
+      width: 18px;
+      height: 18px;
       border-radius: 50%;
-      animation: spin .8s linear infinite;
+      border: 3px solid rgba(255,255,255,.16);
+      border-top-color: var(--tag);
+      animation: spin .85s linear infinite;
+      flex: 0 0 auto;
     }
+
     @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error {
+      display: none;
+      margin-top: 13px;
+      border-radius: 18px;
+      background: rgba(255,194,194,.13);
+      border: 1px solid rgba(255,194,194,.35);
+      color: #ffe8e8;
+      padding: 13px 14px;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .mini {
+      margin: 12px 2px 0;
+      color: rgba(255,248,236,.56);
+      font-size: 12px;
+      line-height: 1.45;
+    }
 
     .result { display: none; }
 
     .decision {
-      border-radius: 22px;
-      padding: 18px;
-      text-align: center;
-      color: var(--ink);
+      border-radius: 24px;
+      padding: 19px;
       margin-bottom: 14px;
+      color: #101b2b;
+      text-align: center;
     }
 
-    .decision .smallcap { font-size: 12px; font-weight: 900; letter-spacing: .12em; opacity: .7; }
-    .decision .main { font-size: 28px; font-weight: 1000; margin-top: 4px; }
+    .decision .caption {
+      text-transform: uppercase;
+      letter-spacing: .13em;
+      font-size: 12px;
+      font-weight: 900;
+      opacity: .7;
+    }
+
+    .decision .main {
+      margin-top: 5px;
+      font-size: 29px;
+      line-height: 1.05;
+      font-weight: 1000;
+    }
 
     .buy { background: var(--green); }
     .careful { background: var(--yellow); }
@@ -233,126 +293,127 @@
 
     .tagCard {
       background: var(--tag);
-      color: var(--ink);
-      border-radius: 21px;
+      color: var(--tag-dark);
+      border-radius: 23px;
       padding: 17px;
-      border: 2px dashed rgba(13,26,42,.24);
-      margin-top: 12px;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,.18);
+      margin-top: 13px;
+      border: 2px dashed rgba(16,27,43,.22);
+    }
+
+    .tagTitle {
+      margin: 0 0 8px;
+      font-size: 18px;
+      font-weight: 1000;
+      letter-spacing: -.2px;
     }
 
     .row {
       display: grid;
-      grid-template-columns: 43% 57%;
+      grid-template-columns: 42% 58%;
       gap: 10px;
       padding: 11px 0;
-      border-bottom: 1px solid rgba(13,26,42,.13);
+      border-bottom: 1px solid rgba(16,27,43,.13);
       font-size: 15px;
     }
 
-    .row:last-child { border-bottom: none; }
-    .key { opacity: .72; }
+    .row:last-child { border-bottom: 0; }
+    .key { opacity: .68; }
     .value { text-align: right; font-weight: 900; }
 
     .textBlock {
-      line-height: 1.55;
       font-size: 15px;
+      line-height: 1.55;
       white-space: pre-wrap;
     }
 
     .chips {
       display: flex;
-      gap: 8px;
       flex-wrap: wrap;
+      gap: 8px;
       margin-top: 10px;
     }
 
     .chip {
-      background: rgba(13,26,42,.09);
-      border: 1px solid rgba(13,26,42,.13);
       padding: 8px 10px;
       border-radius: 999px;
+      background: rgba(16,27,43,.09);
+      border: 1px solid rgba(16,27,43,.13);
       font-size: 13px;
       font-weight: 800;
     }
 
-    .error {
-      display: none;
-      background: rgba(255, 209, 209, .14);
-      border: 1px solid rgba(255, 209, 209, .35);
-      color: #ffe7e7;
-      border-radius: 18px;
-      padding: 12px 13px;
-      line-height: 1.4;
-      margin-top: 12px;
-      font-size: 14px;
-    }
-
-    .footerNote {
-      color: rgba(255,248,236,.62);
-      font-size: 12px;
-      line-height: 1.45;
-      margin: 12px 2px 0;
+    @media (max-width: 380px) {
+      body { padding-left: 12px; padding-right: 12px; }
+      h1 { font-size: 32px; }
+      .logo { width: 56px; height: 56px; border-radius: 18px; }
+      .cameraShell, video, .preview { height: 256px; }
     }
   </style>
 </head>
+
 <body>
   <main class="app">
-    <header class="top">
-      <div class="logo"><img src="icon-192.png" alt="BrandScan logo"></div>
-      <div>
-        <h1>BrandScan</h1>
-        <p class="lead">Сканер брендов, ярлыков и цены для секонда. Фото, цена, короткий вывод.</p>
+    <header class="hero">
+      <div class="brandRow">
+        <div class="logo"><img src="icon-192.png" alt="BrandScan"></div>
+        <div>
+          <h1>BrandScan</h1>
+          <p class="subtitle">Быстрая проверка бренда, цены и риска покупки в секонде.</p>
+        </div>
       </div>
     </header>
 
     <section class="card">
-      <h2 class="title">Сканирование</h2>
+      <h2 class="sectionTitle">Сканирование</h2>
 
-      <div class="cameraBox">
+      <div class="cameraShell">
         <video id="video" playsinline autoplay muted></video>
-        <img id="preview" class="preview" alt="Фото вещи" style="display:none;">
+        <img id="preview" class="preview" alt="Фото ярлыка">
         <canvas id="canvas"></canvas>
-        <div class="scanFrame"></div>
+        <div class="focusFrame"></div>
       </div>
 
-      <p class="hint">Наведи камеру на ярлык. Лучше снять бренд, состав, размер и внутреннюю бирку. Можно загрузить фото из галереи.</p>
+      <p class="cameraNote">Сними ярлык крупно. Лучше, если видны бренд, размер, состав и страна производства.</p>
 
-      <div class="actions">
-        <button id="cameraBtn" class="secondary">Камера</button>
-        <label class="fileBtn">Фото
+      <div class="grid2">
+        <button id="cameraBtn" class="secondary" type="button">Камера</button>
+        <label class="fileButton">Фото
           <input id="fileInput" type="file" accept="image/*">
         </label>
       </div>
 
-      <div class="actions">
-        <button id="captureBtn">Снять ярлык</button>
-        <button id="clearBtn" class="secondary">Сбросить</button>
+      <div class="grid2">
+        <button id="captureBtn" type="button">Снять ярлык</button>
+        <button id="clearBtn" class="secondary" type="button">Сбросить</button>
       </div>
 
       <label for="priceInput">Цена в секонде, $</label>
       <input id="priceInput" type="number" inputmode="decimal" placeholder="Например: 12">
 
-      <label for="noteInput">Что видно вручную, если хочешь уточнить</label>
-      <input id="noteInput" type="text" placeholder="Например: Levi's jacket, made in USA">
+      <label for="noteInput">Уточнение вручную</label>
+      <input id="noteInput" type="text" placeholder="Например: NEXT, made in Bangladesh">
 
-      <button id="analyzeBtn" class="wide">Проверить через ИИ</button>
-      <button id="installBtn" class="wide install">Установить BrandScan</button>
+      <button id="analyzeBtn" class="primaryWide" type="button">Проверить через ИИ</button>
+      <button id="installBtn" class="install" type="button">Установить BrandScan</button>
 
-      <div id="loading" class="loading"><div class="spinner"></div><span>ИИ проверяет бренд, цену и признаки оригинальности...</span></div>
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+        <span>Проверяю фото, бренд, цену и признаки риска...</span>
+      </div>
+
       <div id="error" class="error"></div>
 
-      <p class="footerNote">Вывод не является экспертизой подлинности. Это быстрый помощник для покупки: бренд, ориентир цены, риск и что сфотографировать еще.</p>
+      <p class="mini">BrandScan дает ориентир, а не экспертное заключение. Для точной проверки нужны дополнительные фото и ручная оценка.</p>
     </section>
 
     <section id="result" class="card result">
       <div id="decisionBox" class="decision careful">
-        <div class="smallcap">Решение</div>
-        <div id="decisionText" class="main">Проверить</div>
+        <div class="caption">Решение</div>
+        <div id="decisionText" class="main">Нужно больше фото</div>
       </div>
 
       <div class="tagCard">
-        <h2 class="title">Короткий ответ</h2>
+        <h3 class="tagTitle">Короткий ответ</h3>
         <div class="row"><div class="key">Бренд</div><div id="brand" class="value">—</div></div>
         <div class="row"><div class="key">Вещь</div><div id="item" class="value">—</div></div>
         <div class="row"><div class="key">Новая цена</div><div id="newPrice" class="value">—</div></div>
@@ -363,18 +424,18 @@
       </div>
 
       <div class="tagCard">
-        <h2 class="title">Почему</h2>
+        <h3 class="tagTitle">Почему</h3>
         <div id="why" class="textBlock">—</div>
       </div>
 
       <div class="tagCard">
-        <h2 class="title">Что сфотографировать еще</h2>
+        <h3 class="tagTitle">Что сфотографировать еще</h3>
         <div id="morePhotos" class="chips"></div>
       </div>
 
       <div class="tagCard">
-        <h2 class="title">Источники / оговорки</h2>
-        <div id="sources" class="textBlock">—</div>
+        <h3 class="tagTitle">Оговорка</h3>
+        <div id="sources" class="textBlock">Цены ориентировочные. Итог зависит от состояния, размера, сезона и площадки продажи.</div>
       </div>
     </section>
   </main>
@@ -394,18 +455,38 @@
     let imageDataUrl = "";
     let stream = null;
 
+    function showError(text) {
+      errorBox.textContent = text;
+      errorBox.style.display = "block";
+    }
+
+    function hideError() {
+      errorBox.textContent = "";
+      errorBox.style.display = "none";
+    }
+
     async function startCamera() {
+      hideError();
       try {
-        errorBox.style.display = 'none';
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+          showError("Браузер не дает доступ к камере. Загрузи фото из галереи.");
+          return;
+        }
+
+        if (stream) {
+          stream.getTracks().forEach(t => t.stop());
+        }
+
         stream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: { ideal: "environment" } },
           audio: false
         });
+
         video.srcObject = stream;
-        video.style.display = 'block';
-        preview.style.display = 'none';
+        video.style.display = "block";
+        preview.style.display = "none";
       } catch (err) {
-        showError("Камера не открылась. Разреши доступ к камере или загрузи фото из галереи.");
+        showError("Камера не открылась. Разреши доступ к камере или используй загрузку фото.");
       }
     }
 
@@ -416,31 +497,38 @@
       }
     }
 
-    function capture() {
-      if (!video.videoWidth) {
-        showError("Камера еще не готова. Подожди секунду или загрузи фото.");
+    function capturePhoto() {
+      hideError();
+
+      if (!video.videoWidth || !video.videoHeight) {
+        showError("Камера еще не готова. Подожди пару секунд и нажми «Снять ярлык» еще раз.");
         return;
       }
+
       canvas.width = video.videoWidth;
       canvas.height = video.videoHeight;
-      const ctx = canvas.getContext('2d');
-      ctx.drawImage(video, 0, 0);
-      imageDataUrl = canvas.toDataURL('image/jpeg', 0.86);
+
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      imageDataUrl = canvas.toDataURL("image/jpeg", 0.86);
       preview.src = imageDataUrl;
-      preview.style.display = 'block';
-      video.style.display = 'none';
+      preview.style.display = "block";
+      video.style.display = "none";
       stopCamera();
     }
 
-    fileInput.addEventListener('change', () => {
+    fileInput.addEventListener("change", () => {
+      hideError();
       const file = fileInput.files[0];
       if (!file) return;
+
       const reader = new FileReader();
       reader.onload = e => {
         imageDataUrl = e.target.result;
         preview.src = imageDataUrl;
-        preview.style.display = 'block';
-        video.style.display = 'none';
+        preview.style.display = "block";
+        video.style.display = "none";
         stopCamera();
       };
       reader.readAsDataURL(file);
@@ -450,45 +538,48 @@
       imageDataUrl = "";
       preview.src = "";
       preview.style.display = "none";
-      document.getElementById('result').style.display = "none";
-      errorBox.style.display = "none";
+      document.getElementById("result").style.display = "none";
+      hideError();
       startCamera();
     }
 
-    function showError(text) {
-      errorBox.textContent = text;
-      errorBox.style.display = 'block';
-    }
-
     async function analyze() {
-      const price = document.getElementById('priceInput').value;
-      const note = document.getElementById('noteInput').value;
+      hideError();
+
+      const thriftPrice = document.getElementById("priceInput").value.trim();
+      const note = document.getElementById("noteInput").value.trim();
 
       if (!imageDataUrl) {
-        showError("Сначала сними ярлык или загрузи фото.");
+        showError("Сначала сделай фото ярлыка или загрузи снимок.");
         return;
       }
 
       loading.style.display = "flex";
-      errorBox.style.display = "none";
       analyzeBtn.disabled = true;
 
       try {
-        const res = await fetch('/api/analyze', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ imageDataUrl, thriftPrice: price, note })
+        const res = await fetch("/api/analyze", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ imageDataUrl, thriftPrice, note })
         });
 
-        const data = await res.json();
+        const contentType = res.headers.get("content-type") || "";
+        const rawText = await res.text();
+
+        if (!contentType.includes("application/json")) {
+          throw new Error("API вернул не JSON. Скорее всего Vercel не видит папку api/analyze.js. Ответ сервера: " + rawText.slice(0, 120));
+        }
+
+        const data = JSON.parse(rawText);
 
         if (!res.ok) {
-          throw new Error(data.error || "Ошибка анализа");
+          throw new Error(data.error || "Ошибка API");
         }
 
         renderResult(data);
       } catch (err) {
-        showError("ИИ-анализ не сработал. Проверь, что проект запущен на Vercel и задан OPENAI_API_KEY. Текст ошибки: " + err.message);
+        showError(err.message);
       } finally {
         loading.style.display = "none";
         analyzeBtn.disabled = false;
@@ -496,66 +587,76 @@
     }
 
     function renderResult(data) {
-      const decisionBox = document.getElementById('decisionBox');
-      const decisionText = (data.decision || "Нужно больше фото").toLowerCase();
+      const decision = data.decision || "Нужно больше фото";
+      const low = decision.toLowerCase();
 
-      decisionBox.className = "decision careful";
-      if (decisionText.includes("брать") && !decisionText.includes("осторож")) decisionBox.className = "decision buy";
-      if (decisionText.includes("не брать")) decisionBox.className = "decision skip";
-      if (decisionText.includes("осторож") || decisionText.includes("фото") || decisionText.includes("провер")) decisionBox.className = "decision careful";
+      const box = document.getElementById("decisionBox");
+      box.className = "decision careful";
 
-      document.getElementById('decisionText').textContent = data.decision || "Нужно больше фото";
-      document.getElementById('brand').textContent = data.brand || "Не определен";
-      document.getElementById('item').textContent = data.item_type || "Не определено";
-      document.getElementById('newPrice').textContent = data.new_price_range || "Нет данных";
-      document.getElementById('usedPrice').textContent = data.used_price_range || "Нет данных";
-      document.getElementById('thriftPrice').textContent = data.thrift_price ? String(data.thrift_price) : "Не указана";
-      document.getElementById('auth').textContent = data.authenticity || "Есть сомнения";
-      document.getElementById('confidence').textContent = data.confidence ? data.confidence + "%" : "—";
-      document.getElementById('why').textContent = data.reason || "Нет объяснения.";
+      if (low.includes("не брать")) box.className = "decision skip";
+      else if (low.includes("брать") && !low.includes("осторож")) box.className = "decision buy";
+      else box.className = "decision careful";
 
-      const more = document.getElementById('morePhotos');
-      more.innerHTML = "";
-      (data.need_more_photos || ["внутренний ярлык", "состав", "логотип", "швы", "фурнитура"]).forEach(x => {
-        const chip = document.createElement('div');
+      document.getElementById("decisionText").textContent = decision;
+      document.getElementById("brand").textContent = data.brand || "Не определен";
+      document.getElementById("item").textContent = data.item_type || "Не определено";
+      document.getElementById("newPrice").textContent = data.new_price_range || "Нет данных";
+      document.getElementById("usedPrice").textContent = data.used_price_range || "Нет данных";
+      document.getElementById("thriftPrice").textContent = data.thrift_price || "Не указана";
+      document.getElementById("auth").textContent = data.authenticity || "Недостаточно данных";
+      document.getElementById("confidence").textContent = data.confidence ? data.confidence + "%" : "—";
+      document.getElementById("why").textContent = data.reason || "Недостаточно данных для уверенного вывода.";
+
+      const morePhotos = document.getElementById("morePhotos");
+      morePhotos.innerHTML = "";
+      const items = Array.isArray(data.need_more_photos) && data.need_more_photos.length
+        ? data.need_more_photos
+        : ["внутренний ярлык", "состав", "швы", "фурнитура", "общий вид"];
+
+      items.forEach(item => {
+        const chip = document.createElement("div");
         chip.className = "chip";
-        chip.textContent = x;
-        more.appendChild(chip);
+        chip.textContent = item;
+        morePhotos.appendChild(chip);
       });
 
-      const src = data.sources && data.sources.length ? data.sources.join("\n") : "Цены ориентировочные. Для точной оценки нужны модель, состояние, размер, страна и площадка продажи.";
-      document.getElementById('sources').textContent = src;
+      document.getElementById("sources").textContent =
+        Array.isArray(data.sources) && data.sources.length
+          ? data.sources.join("\n")
+          : "Цены ориентировочные. Итог зависит от состояния, размера, сезона и площадки продажи.";
 
-      document.getElementById('result').style.display = "block";
-      document.getElementById('result').scrollIntoView({ behavior: 'smooth' });
+      document.getElementById("result").style.display = "block";
+      document.getElementById("result").scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    cameraBtn.addEventListener('click', startCamera);
-    captureBtn.addEventListener('click', capture);
-    clearBtn.addEventListener('click', clearAll);
-    analyzeBtn.addEventListener('click', analyze);
+    cameraBtn.addEventListener("click", startCamera);
+    captureBtn.addEventListener("click", capturePhoto);
+    clearBtn.addEventListener("click", clearAll);
+    analyzeBtn.addEventListener("click", analyze);
 
-    if ('mediaDevices' in navigator) startCamera();
+    if ("mediaDevices" in navigator) {
+      startCamera();
+    }
 
-    if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").catch(() => {});
     }
 
     let deferredPrompt;
-    const installBtn = document.getElementById('installBtn');
+    const installBtn = document.getElementById("installBtn");
 
-    window.addEventListener('beforeinstallprompt', (e) => {
+    window.addEventListener("beforeinstallprompt", e => {
       e.preventDefault();
       deferredPrompt = e;
-      installBtn.style.display = 'block';
+      installBtn.style.display = "block";
     });
 
-    installBtn.addEventListener('click', async () => {
+    installBtn.addEventListener("click", async () => {
       if (!deferredPrompt) return;
       deferredPrompt.prompt();
       await deferredPrompt.userChoice;
       deferredPrompt = null;
-      installBtn.style.display = 'none';
+      installBtn.style.display = "none";
     });
   </script>
 </body>

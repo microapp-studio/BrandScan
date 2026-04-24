@@ -4,8 +4,8 @@
   "description": "AI scanner for thrift, resale and clothing labels",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#172536",
-  "theme_color": "#172536",
+  "background_color": "#101b2b",
+  "theme_color": "#101b2b",
   "orientation": "portrait",
   "icons": [
     {
