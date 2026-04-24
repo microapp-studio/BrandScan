@@ -1,12 +1,22 @@
 {
-"name": "BrandScan",
-"short_name": "BrandScan",
-"start_url": "./index.html",
-"display": "standalone",
-"background_color": "#172536",
-"theme_color": "#172536",
-"icons": [
-{"src": "icon-192.png","sizes": "192x192","type": "image/png"},
-{"src": "icon-512.png","sizes": "512x512","type": "image/png"}
-]
+  "name": "BrandScan",
+  "short_name": "BrandScan",
+  "description": "AI scanner for thrift, resale and clothing labels",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#172536",
+  "theme_color": "#172536",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }
