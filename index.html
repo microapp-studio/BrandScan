@@ -9,10 +9,13 @@
     :root {
       --bg: #0a0a0c;
       --card-bg: rgba(255, 255, 255, 0.04);
-      --accent: #d4af37; /* Золотистый винтаж */
+      --accent: #d4af37;
       --text: #ffffff;
       --text-muted: #a1a1aa;
       --glass: rgba(255, 255, 255, 0.08);
+      --error: #ef4444;
+      --success: #22c55e;
+      --warning: #facc15;
     }
 
     body {
@@ -23,7 +26,7 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    .app { max-width: 500px; margin: 0 auto; padding: 20px; }
+    .app { max-width: 500px; margin: 0 auto; padding: 20px; padding-bottom: 50px; }
 
     header { text-align: center; padding: 40px 0 20px; }
     h1 { font-size: 42px; font-weight: 900; letter-spacing: -2px; margin: 0; background: linear-gradient(to right, #fff, #666); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
@@ -58,7 +61,10 @@
       font-size: 16px;
       backdrop-filter: blur(10px);
       transition: all 0.2s;
+      cursor: pointer;
     }
+
+    button:active { transform: scale(0.98); }
 
     button#analyzeBtn {
       background: white;
@@ -78,7 +84,9 @@
       color: white;
       margin-bottom: 10px;
       font-size: 16px;
+      outline: none;
     }
+    input:focus { border-color: var(--accent); }
 
     .result-card {
       display: none;
@@ -99,9 +107,9 @@
       margin-bottom: 15px;
     }
 
-    .buy { background: #22c55e; color: #000; }
-    .wait { background: #facc15; color: #000; }
-    .skip { background: #ef4444; color: #fff; }
+    .buy { background: var(--success); color: #000; }
+    .wait { background: var(--warning); color: #000; }
+    .skip { background: var(--error); color: #fff; }
 
     .price-grid {
       display: grid;
@@ -123,19 +131,32 @@
       display: none;
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.8);
+      background: rgba(0,0,0,0.85);
       z-index: 100;
       align-items: center;
       justify-content: center;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(15px);
+      text-align: center;
     }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--glass);
+      border-top: 4px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 20px;
+    }
+
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
   <div class="app">
     <header>
       <h1>BrandScan</h1>
-      <p style="color: var(--text-muted)">AI-эксперт в вашем кармане</p>
+      <p style="color: var(--text-muted)">AI-эксперт по винтажу</p>
     </header>
 
     <div class="camera-container">
@@ -145,17 +166,16 @@
 
     <div class="controls">
       <button id="captureBtn">Сделать фото</button>
-      <label style="display: contents;">
-        <button onclick="document.getElementById('fileInput').click()">Галерея</button>
-        <input type="file" id="fileInput" hidden accept="image/*">
-      </label>
+      <button onclick="document.getElementById('fileInput').click()">Из галереи</button>
+      <input type="file" id="fileInput" hidden accept="image/*">
       
       <div class="input-group" style="grid-column: span 2;">
-        <input type="number" id="priceInput" placeholder="Цена в секонде, $">
-        <input type="text" id="noteInput" placeholder="Доп. детали (бренд, состав)">
+        <input type="number" id="priceInput" placeholder="Цена в магазине, $">
+        <input type="text" id="noteInput" placeholder="Заметки (состав, дефекты)">
       </div>
 
-      <button id="analyzeBtn">Проверить через Gemini</button>
+      <button id="analyzeBtn">Проверить вещь</button>
+      <button id="resetBtn" style="grid-column: span 2; background: transparent; border: none; color: var(--text-muted); font-size: 14px; margin-top: 10px;">Сбросить всё</button>
     </div>
 
     <div id="result" class="result-card">
@@ -165,35 +185,135 @@
       
       <div class="price-grid">
         <div class="price-item">
-          <div class="price-label">Новая</div>
+          <div class="price-label">Retail (Новая)</div>
           <div id="resNew" class="price-value">—</div>
         </div>
         <div class="price-item">
-          <div class="price-label">Resale</div>
+          <div class="price-label">Resale (Б/У)</div>
           <div id="resUsed" class="price-value">—</div>
         </div>
       </div>
 
       <div style="background: var(--glass); padding: 20px; border-radius: 20px;">
-        <div class="price-label">Вердикт</div>
-        <div id="resReason" style="line-height: 1.5;">—</div>
+        <div class="price-label">Вердикт Gemini</div>
+        <div id="resReason" style="line-height: 1.5; font-size: 15px;">—</div>
       </div>
     </div>
   </div>
 
   <div id="loader" class="loading-overlay">
-    <div style="text-align: center;">
+    <div>
       <div class="spinner"></div>
-      <p>Gemini изучает ярлыки...</p>
+      <p style="font-weight: 700; font-size: 18px;">Gemini сканирует бренд...</p>
+      <p style="color: var(--text-muted); font-size: 14px;">Это займет несколько секунд</p>
     </div>
   </div>
 
   <canvas id="canvas" style="display:none"></canvas>
 
   <script>
-    // Здесь логика переключения камеры и вызова API (аналогично вашему index.html, но с обновленным рендерингом)
-    // Важно: замените эндпоинт fetch на '/api/analyze'
-    // ... (код JS остался почти таким же, но с привязкой к новым ID)
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const preview = document.getElementById('preview');
+    const fileInput = document.getElementById('fileInput');
+    const captureBtn = document.getElementById('captureBtn');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const loader = document.getElementById('loader');
+    const resultCard = document.getElementById('result');
+
+    let imageDataUrl = "";
+
+    async function initCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+          audio: false
+        });
+        video.srcObject = stream;
+        video.style.display = 'block';
+        preview.style.display = 'none';
+      } catch (err) {
+        console.error("Камера недоступна:", err);
+      }
+    }
+
+    captureBtn.addEventListener('click', () => {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      canvas.getContext('2d').drawImage(video, 0, 0);
+      imageDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+      preview.src = imageDataUrl;
+      preview.style.display = 'block';
+      video.style.display = 'none';
+    });
+
+    fileInput.addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        imageDataUrl = event.target.result;
+        preview.src = imageDataUrl;
+        preview.style.display = 'block';
+        video.style.display = 'none';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    resetBtn.addEventListener('click', () => {
+      imageDataUrl = "";
+      preview.style.display = 'none';
+      resultCard.style.display = 'none';
+      initCamera();
+    });
+
+    analyzeBtn.addEventListener('click', async () => {
+      if (!imageDataUrl) return alert("Сделайте фото или выберите файл!");
+
+      loader.style.display = 'flex';
+      const thriftPrice = document.getElementById('priceInput').value;
+      const note = document.getElementById('noteInput').value;
+
+      try {
+        const response = await fetch('/api/analyze', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ imageDataUrl, thriftPrice, note })
+        });
+
+        if (!response.ok) throw new Error('Ошибка API');
+        const data = await response.json();
+        renderResult(data);
+      } catch (err) {
+        alert("Произошла ошибка при анализе. Проверьте GEMINI_API_KEY в Vercel.");
+        console.error(err);
+      } finally {
+        loader.style.display = 'none';
+      }
+    });
+
+    function renderResult(data) {
+      resultCard.style.display = 'block';
+      document.getElementById('resBrand').textContent = data.brand || 'Неизвестно';
+      document.getElementById('resItem').textContent = data.item_type || 'Вещь';
+      document.getElementById('resNew').textContent = data.new_price_range || '—';
+      document.getElementById('resUsed').textContent = data.used_price_range || '—';
+      document.getElementById('resReason').textContent = data.reason || 'Нет описания';
+
+      const badge = document.getElementById('badge');
+      const decision = (data.decision || '').toLowerCase();
+      badge.textContent = data.decision || 'Инфо';
+      
+      badge.className = 'decision-badge';
+      if (decision.includes('брать')) badge.classList.add('buy');
+      else if (decision.includes('осторож')) badge.classList.add('wait');
+      else badge.classList.add('skip');
+      
+      resultCard.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    initCamera();
   </script>
 </body>
 </html>
